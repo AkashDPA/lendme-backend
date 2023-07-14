@@ -31,7 +31,7 @@ exports.getUser = (req, res) => {
 }
 
 exports.updateUserData = (req, res) => {     
-    User.findOne({ where: {id: req.user.id}})
+    User.scope('all').findOne({ where: {id: req.user.id}})
         .then(async userDetails => {
             if (!userDetails){
                 return res.status(200).json(buildRes({message: 'No user found'}));
@@ -55,7 +55,7 @@ exports.updateUserData = (req, res) => {
 }
 
 exports.updatePassword = (req, res) => {
-    User.findOne({ where: {id: req.user.id}})
+    User.scope('all').findOne({ where: {id: req.user.id}})
         .then(async userDetails => {
             if (!userDetails){
                 return res.status(200).json(buildRes({message: 'No user found'}));
@@ -80,9 +80,8 @@ exports.updatePassword = (req, res) => {
 exports.portfolio = async (req, res) => { 
     const user = await User.findOne({ where: {id: req.user.id},
             include: [
-                {association: 'lent', include: [{association: 'rps'}]},
-                {association: 'borrowed', include: [{association: 'rps'}]},
-                {association: 'wallet'},
+                {association: 'lent',  separate: true, foreignKeyConstraint:true, include: [{association: 'rps', separate: true, foreignKeyConstraint:true,}, {association: 'borrower'}, {association: 'lender'}]},
+                {association: 'borrowed', separate: true, foreignKeyConstraint:true, include: [{association: 'rps', separate: true, foreignKeyConstraint:true,}, {association: 'borrower'}, {association: 'lender'}]},
             ],
     })
     .catch(error => {
