@@ -43,7 +43,7 @@ exports.generateAgreement = async function(loanId) {
     // let file = fs.readFileSync(pdf.data, 'utf-8');
     // const uploadRes = await clodinary.v2.uploader.upload(pdf.data, {access_mode: 'authenticated', folder: 'agreement',filename_override: loan.id, resource_type: 'auto'} );
     // console.log(uploadRes);
-    return methodReturn(true, 'Agreement generated', {agreementUrl: pdf});
+    return methodReturn(true, 'Agreement generated', {agreementUrl: pdf.data});
 }
 
 exports.getDownloadUrl = async function(publicId){
@@ -96,8 +96,7 @@ const buildPDF = async (html, fileName) => {
 
         await page.close();
         await browser.close();
-        const p = fs.readFileSync(pdfPath, 'utf-8');
-        return methodReturn(true, 'Agreement generated', p);
+        return methodReturn(true, 'Agreement generated', pdfPath);
 
     } catch (err) {
         return methodReturn(false, err.message);
