@@ -257,7 +257,8 @@ exports.agreement = async (req, res) => {
     // }
 
     const agreement = await generateAgreement(loan.id);
-    const pdf = fs.readFileSync(agreement.data.agreementUrl, 'utf-8');
+    return res.status(200).json(buildRes({success: true, pdf: agreement}));
+    // const pdf = fs.readFileSync(agreement.data.agreementUrl, 'utf-8');
         
     //render?
     if(req.query.render == 1){
